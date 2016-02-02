@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<!DOCTYPE mapper   
+PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"  
+"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd"> 
+<mapper namespace="com.pt.schooldistrict.dao.EstateDao">
+
+	<resultMap id="EstateMap" type="Estate">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+        <result property="averagePrice" column="averagePrice"/>
+        <result property="buildYear" column="built"/>
+        <result property="district" column="district_id"/>
+	</resultMap>
+
+    <select id="selectByNameEquals" resultType="Estate" parameterType="String">
+        SELECT * FROM sd_estate where name = #{name} LIMIT 1
+    </select>
+
+    <select id="selectByNameLike" resultType="Estate" parameterType="String">
+        SELECT * FROM sd_estate where name LIKE "%"#{name}"%"
+    </select>
+
+    <select id="selectByAddressLike" resultType="Estate" parameterType="String">
+        SELECT * FROM sd_estate where address LIKE "%"#{name}"%"
+    </select>
+
+    <select id="selectByPageId" resultType="Estate" parameterType="String">
+        SELECT * FROM sd_estate where pageId = #{pageId}
+    </select>
+   
+   <insert id="insert" parameterType="Estate">
+   	  INSERT INTO sd_estate
+   	  (name, address, averagePrice, built, district_id, url, pageId)
+   	  VALUES
+   	  (#{name}, #{address}, #{averagePrice}, #{buildYear}, #{district}, #{url}, #{pageId})
+   </insert>
+   
+   <select id="listAll" resultMap="EstateMap">
+      SELECT * FROM sd_estate
+   </select>
+   
+   <delete id="deleteByID" parameterType="int">
+   DELETE FROM sd_estate WHERE id = #{ID}
+   </delete>
+
+    <update id="updateById" parameterType="Estate">
+        UPDATE sd_estate SET address=#{address}, averagePrice=#{averagePrice},
+        built = #{buildYear}, district_id = #{district}, url = #{url}, pageId = #{pageId} WHERE ID=#{id}
+    </update>
+
+    <select id="selectBySchoolId" resultType="Estate" parameterType="int">
+        SELECT sd_estate.id, sd_estate.name, sd_estate.address
+        FROM sd_estate, sd_schooldistrict
+        WHERE sd_estate.id = sd_schooldistrict.estate_id and sd_schooldistrict.school_id = #{schoolId};
+    </select>
+
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.pt.schooldistrict.dao.HouseDao">
+
+    <resultMap id="HouseMap" type="House">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="averagePrice" column="averagePrice"/>
+        <result property="buildYear" column="built"/>
+        <result property="district" column="district"/>
+    </resultMap>
+
+    <select id="selectById" resultType="House" parameterType="int">
+        SELECT * FROM sd_house where id =#{id}
+    </select>
+
+    <insert id="insert" parameterType="House">
+        INSERT INTO sd_house
+        (title, estate_id, price, area, type, buildYear, url, pageId)
+        VALUES
+        (#{title}, #{estateId}, #{price}, #{area}, #{type}, #{buildYear}, #{url}, #{pageId})
+    </insert>
+
+    <select id="listAll" resultMap="HouseMap">
+        SELECT * FROM sd_house LIMIT 10
+    </select>
+
+    <delete id="deleteByID" parameterType="int">
+        DELETE FROM sd_house WHERE id = #{ID}
+    </delete>
+
+    <select id="selectByEstateId" resultMap="HouseMap" parameterType="int">
+        SELECT * FROM sd_house WHERE sd_house.`estate_id` = #{estateId} ORDER BY sd_house.price;
+    </select>
+
+</mapper>

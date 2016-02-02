@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<!-- 指定properties配置文件， 我这里面配置的是数据库相关 -->
+  <properties resource="dbConfig.properties"></properties>
+  
+  <typeAliases>
+		<typeAlias alias="Estate"			type="com.pt.schooldistrict.model.Estate"/>
+        <typeAlias alias="House"			type="com.pt.schooldistrict.model.House"/>
+        <typeAlias alias="School"			type="com.pt.schooldistrict.model.School"/>
+        <typeAlias alias="SchoolDistrict"			type="com.pt.schooldistrict.model.SchoolDistrict"/>
+	</typeAliases>
+      
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+         <!-- 上面指定了数据库配置文件， 配置文件里面也是对应的这四个属性 -->
+         <property name="driver" value="${dbConfig.driver}"/>
+         <property name="url" value="${dbConfig.url}"/>
+         <property name="username" value="${dbConfig.username}"/>
+         <property name="password" value="${dbConfig.password}"/>
+         
+      </dataSource>
+    </environment>
+  </environments>
+  
+  <!-- 映射文件，mybatis精髓 -->
+  <mappers>
+        <mapper resource="mapper/EstateMapper.xml"/>
+        <mapper resource="mapper/HouseMapper.xml"/>
+        <mapper resource="mapper/SchoolMapper.xml"/>
+        <mapper resource="mapper/SchoolDistrictMapper.xml"/>
+  </mappers>
+  
+</configuration>

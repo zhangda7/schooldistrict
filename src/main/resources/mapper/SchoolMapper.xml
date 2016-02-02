@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.pt.schooldistrict.dao.SchoolDao">
+
+    <resultMap id="SchoolMap" type="School">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="district_id" column="districtId"/>
+    </resultMap>
+
+    <select id="selectById" resultType="School" parameterType="int">
+        SELECT * FROM sd_school where id =#{id}
+    </select>
+
+    <insert id="insert" parameterType="School">
+        INSERT INTO sd_school
+        (name, address, isPublic, type, alias, district_id)
+        VALUES
+        (#{name}, #{address}, #{isPublic}, #{type}, #{alias}, #{districtId})
+    </insert>
+
+    <select id="listAll" resultMap="SchoolMap">
+        SELECT * FROM sd_school
+    </select>
+
+    <select id="selectByNameEquals" resultType="School" parameterType="String">
+        SELECT * FROM sd_school where name = #{name} LIMIT 1
+    </select>
+
+    <delete id="deleteByID" parameterType="int">
+        DELETE FROM sd_school WHERE id = #{ID}
+    </delete>
+
+</mapper>

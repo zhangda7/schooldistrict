@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.pt.schooldistrict.dao.SchoolDistrictDao">
+
+    <resultMap id="SchoolDistrictMap" type="SchoolDistrict">
+        <id property="id" column="id"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="SchoolDistrict">
+        INSERT INTO sd_schooldistrict
+        (school_id, estate_id, district_id, year)
+        VALUES
+        (#{schoolId}, #{estateId}, #{districtId}, #{year})
+    </insert>
+
+    <select id="listAll" resultMap="SchoolDistrictMap">
+        SELECT * FROM sd_schooldistrict
+    </select>
+
+    <delete id="deleteByID" parameterType="int">
+        DELETE FROM sd_schooldistrict WHERE id = #{ID}
+    </delete>
+
+</mapper>
