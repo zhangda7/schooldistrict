@@ -1,4 +1,5 @@
 target/
 doc/
 *.class
-.idea/
+.idea/*
+.settings
