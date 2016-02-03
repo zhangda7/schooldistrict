@@ -29,8 +29,16 @@
         SELECT * FROM sd_school where name = #{name} LIMIT 1
     </select>
 
+    <select id="selectByAliasLike" resultType="School" parameterType="String">
+        SELECT * FROM sd_school where alias LIKE "%"#{name}"%" LIMIT 1
+    </select>
+
     <delete id="deleteByID" parameterType="int">
         DELETE FROM sd_school WHERE id = #{ID}
     </delete>
+
+    <update id="updateById" parameterType="School">
+        UPDATE sd_school SET address=#{address}, comment=#{comment} WHERE ID=#{id}
+    </update>
 
 </mapper>

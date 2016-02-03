@@ -2,4 +2,4 @@ target/
 doc/
 *.class
 .idea/*
-.settings
+.settings/

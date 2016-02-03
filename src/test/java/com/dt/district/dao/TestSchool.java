@@ -42,6 +42,13 @@ public class TestSchool {
     }
 
     @Test
+    public void testSelectByAlias() {
+        SchoolDao schoolDao=(SchoolDao) ctx.getBean("schoolDao");
+        School ess = schoolDao.selectByAliasLike("明珠A");
+        System.out.println(ess.getName());
+    }
+
+    @Test
     public void insert() {
         School school = new School();
         school.setName("实验学校");

@@ -75,5 +75,15 @@ public class School {
 
     private int districtId;
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    private String comment;
+
 
 }

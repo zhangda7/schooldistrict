@@ -19,6 +19,10 @@ public interface SchoolDao {
 
     School selectByNameEquals(String name);
 
+    School selectByAliasLike(String alias);
+
     void deleteById(int id);
+
+    void updateById(School school);
 
 }
