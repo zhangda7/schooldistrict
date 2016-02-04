@@ -3,3 +3,4 @@ doc/
 *.class
 .idea/*
 .settings/
+*.iml
