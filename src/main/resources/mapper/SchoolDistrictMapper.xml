@@ -6,6 +6,9 @@
 
     <resultMap id="SchoolDistrictMap" type="SchoolDistrict">
         <id property="id" column="id"/>
+        <id property="schoolId" column="school_id"/>
+        <id property="estateId" column="estate_id"/>
+        <id property="districtId" column="district_id"/>
     </resultMap>
 
     <insert id="insert" parameterType="SchoolDistrict">
@@ -22,5 +25,10 @@
     <delete id="deleteByID" parameterType="int">
         DELETE FROM sd_schooldistrict WHERE id = #{ID}
     </delete>
+
+    <select id="selectBySchoolEstateID" resultMap="SchoolDistrictMap" parameterType="SchoolDistrict">
+        SELECT * FROM sd_schooldistrict
+        WHERE school_id = #{schoolId} and estate_id = #{estateId} and district_id = #{districtId} and year = #{year}
+    </select>
 
 </mapper>

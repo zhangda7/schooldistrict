@@ -7,6 +7,7 @@ import com.pt.schooldistrict.model.Estate;
 import com.pt.schooldistrict.model.School;
 import com.pt.schooldistrict.model.SchoolDistrict;
 import com.pt.schooldistrict.util.ExcelReader;
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -15,11 +16,10 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Created by da.zhang on 16/1/21.
- * 该类处理的事情是从sd_estate中获取待更新或添加的小区信息,之后遍历每个小区,将其中的二手房信息添加到数据库中
+ * 该类处理的事情是遍历每个学校的招生信息,再插入到schoolDistrict库中
  */
 public class SchoolDistrictProcessor {
 
@@ -36,10 +36,11 @@ public class SchoolDistrictProcessor {
             int districtIndex = -1;
             int nameIndex = -1;
             int addressIndex = -1;
+            int commentIndex = -1;
             // 对读取Excel表格标题测试
             InputStream is = new FileInputStream(xls);
             ExcelReader excelReader = new ExcelReader();
-            excelReader.setSheetIndex(1);
+            excelReader.setSheetIndex(0);
             String[] title = excelReader.readExcelTitle(is);
             System.out.println("获得Excel表格的标题:");
             int index = 0;
@@ -50,6 +51,8 @@ public class SchoolDistrictProcessor {
                     nameIndex = index;
                 } else if (s.equals("对口路牌（显示）")) {
                     addressIndex = index;
+                } else if(s.equals("备注")) {
+                    commentIndex = index;
                 }
 
                 index++;
@@ -68,27 +71,47 @@ public class SchoolDistrictProcessor {
             for (int i = 1; i <= map.size(); i++) {
                 System.out.println(map.get(i));
                 String district = map.get(i).split("\\|")[districtIndex].trim();
-                String name = map.get(i).split("\\|")[nameIndex].trim();
+                String schoolName = map.get(i).split("\\|")[nameIndex].trim();
                 String address = map.get(i).split("\\|")[addressIndex].trim();
-                System.out.println(String.format("%s-%s-%s", district, name, address));
-                School school = schoolDao.selectByNameEquals(name);
+                System.out.println(String.format("%s-%s-%s", district, schoolName, address));
+                String comment = "NOTFOUND";
+                if(map.get(i).split("\\|").length >= commentIndex + 1) {
+                    comment = map.get(i).split("\\|")[commentIndex].trim();
+                }
+                School school = schoolDao.selectByNameEquals(schoolName);
                 if(school == null) {
-                    logger.warning("School " + name + "not found");
+                    logger.warn("School " + schoolName + "not found");
                     continue;
                 }
-
+                boolean findOne = false;
                 List<Estate> estates = estateDao.selectByAddressLike(address);
-                if(estates.size() <= 0) {
-                    logger.warning("address " + address + "not found");
-                    continue;
+                if(estates.size() == 0) {
+                    estates = estateDao.selectByNameLike(comment);
+                    if(estates.size() > 0) {
+                        findOne = true;
+                    }
+                } else {
+                    findOne = true;
                 }
-                SchoolDistrict sd = new SchoolDistrict();
-                sd.setDistrictId(1);
-                sd.setSchoolId(school.getId());
-                sd.setEstateId(estates.get(0).getId());
-                sd.setYear(2015);
-                schoolDistrictDao.insert(sd);
+                if(findOne) {
+                    //如果查到的小区数目>1, 就每个都把学校插进去好了,因为本来就是一个地址
+                    /*if(estates.size() > 1) {
+                        logger.error(String.format("School:%s, address:%s, find %d matching", schoolName, address, estates.size()));
+                    }*/
+                    for(Estate estate : estates) {
+                        SchoolDistrict sd = new SchoolDistrict();
+                        sd.setDistrictId(1);
+                        sd.setSchoolId(school.getId());
+                        sd.setEstateId(estates.get(0).getId());
+                        sd.setYear(2015);
+                        if(schoolDistrictDao.selectBySchoolEstateID(sd) == null) {
+                            //在DB中查找不到时,才进行insert,把验证的逻辑放到code里做,不要依赖DB的简直验证
+                            schoolDistrictDao.insert(sd);
+                        }
+                    }
 
+
+                }
             }
 
         } catch (FileNotFoundException e) {

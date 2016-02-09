@@ -8,8 +8,10 @@ import com.pt.schooldistrict.dao.SchoolDao;
 import com.pt.schooldistrict.model.Estate;
 import com.pt.schooldistrict.model.House;
 import com.pt.schooldistrict.model.School;
+import com.pt.schooldistrict.model.SchoolDistrict;
 import com.pt.schooldistrict.util.Constants;
 import com.pt.schooldistrict.util.ExcelReader;
+import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import us.codecraft.webmagic.Page;
@@ -23,9 +25,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Logger;
-
 /**
  * Created by da.zhang on 16/1/21.
  * 该类处理的事情是从sd_estate中获取待更新或添加的小区信息,之后遍历每个小区,将其中的二手房信息添加到数据库中
@@ -36,7 +35,10 @@ public class SchoolProcessor {
 
     ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
     SchoolDao schoolDao=(SchoolDao) ctx.getBean("schoolDao");
-
+    EstateDao estateDao=(EstateDao) ctx.getBean("estateDao");
+    /**
+     * 从excel中插入学校信息
+     */
     private void insertFromExcel() {
         try {
             String xls = "doc/2015年浦东新区公办小学对口地域范围表.xls";
@@ -82,18 +84,6 @@ public class SchoolProcessor {
                 if(schoolDao.selectByNameEquals(school.getName()) == null) {
                     schoolDao.insert(school);
                 }
-
-
-
-                //String address = map.get(i).split("\\|")[numberIndex].trim();
-                /*List<Estate> estates = test.estateDao.selectByAddressLike(address);
-                if(estates.size() > 0) {
-                    test.result.put(address, estates.get(0).getName());
-                    found ++;
-                } else {
-                    test.result.put(address, "=========================");
-                    notFound ++;
-                }*/
             }
 
         } catch (FileNotFoundException e) {

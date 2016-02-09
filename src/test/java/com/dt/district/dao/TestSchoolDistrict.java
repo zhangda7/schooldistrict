@@ -23,22 +23,17 @@ public class TestSchoolDistrict {
         ctx=new ClassPathXmlApplicationContext("spring-config.xml");
     }
 
-    @Test
-    public void testListAll() {
-        SchoolDao schoolDao=(SchoolDao) ctx.getBean("schoolDao");
-        List<School> ess = schoolDao.listAll();
-        for(School es : ess) {
-            System.out.println(es);
-        }
-    }
 
     @Test
-    public void testSelectByName() {
-        SchoolDao schoolDao=(SchoolDao) ctx.getBean("schoolDao");
-        List<School> ess = schoolDao.selectById(1);
-        for(School es : ess) {
-            System.out.println(es);
-        }
+    public void testSelectBySchoolEstateID() {
+        SchoolDistrictDao schoolDistrictDao=(SchoolDistrictDao) ctx.getBean("schoolDistrictDao");
+        SchoolDistrict sd = new SchoolDistrict();
+        sd.setDistrictId(1);
+        sd.setSchoolId(21);
+        sd.setEstateId(14510);
+        sd.setYear(2015);
+        SchoolDistrict ret = schoolDistrictDao.selectBySchoolEstateID(sd);
+        System.out.println(ret);
     }
 
     @Test

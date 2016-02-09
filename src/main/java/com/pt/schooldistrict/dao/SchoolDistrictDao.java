@@ -19,4 +19,6 @@ public interface SchoolDistrictDao {
 
     void deleteById(int id);
 
+    SchoolDistrict selectBySchoolEstateID(SchoolDistrict sd);
+
 }

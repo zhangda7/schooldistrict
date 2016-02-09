@@ -113,13 +113,7 @@ public class TestExcel {
                 } else {
                     test.allRet.get(schoolName).notFoundList.add(address + "|" + comment);
                 }
-                /*if(estates.size() > 0) {
-                    test.result.put(address, estates.get(0).getName());
-                    found ++;
-                } else {
-                    test.result.put(address, "=========================");
-                    notFound ++;
-                }*/
+
             } //end excel for
             /*for(Map.Entry<String, String> entry : test.result.entrySet()) {
                 System.out.println(String.format("Address : %s, estate : %s", entry.getKey(), entry.getValue()));
