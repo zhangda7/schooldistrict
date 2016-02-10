@@ -4,3 +4,4 @@ doc/
 .idea/*
 .settings/
 *.iml
+.DS_Store
