@@ -30,9 +30,21 @@ public class LianjiaProcessor implements PageProcessor{
     private final static String URL_DETAIL_REGEX = "http://sh.lianjia.com/xiaoqu/\\d+/?$";
     private final static String URL_ONSALE_LIST_REGEX = "http://sh.lianjia.com/xiaoqu/\\d+/esf/?";
     private final static String URL_SEARCH_REGEX = "http://sh.lianjia.com/xiaoqu/rs";
+    private final static String URL_SCHOOL_START_PAGE = "http://sh.lianjia.com/xuequfang/pudongxinqu/";
+    private final static String URL_SCHOOL_LIST_REGEX = URL_SCHOOL_START_PAGE;
+    private final static String URL_SCHOOL_DETAIL_REGEX = "http://sh.lianjia.com/xuequfang/\\d+.html";
 
     ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
     EstateDao estateDao=(EstateDao) ctx.getBean("estateDao");
+
+    private void processSchoolList(Page page) {
+        //处理URL_SCHOOL_START_PAGE = "http://sh.lianjia.com/xuequfang/pudongxinqu/";开头的学校列表
+
+    }
+
+    private void processSchoolDetail(Page page) {
+        //处理每个学校内的划片小区
+    }
 
     private void processList(Page page) {
         /**
@@ -151,6 +163,10 @@ public class LianjiaProcessor implements PageProcessor{
             processList(page);
         } else if(page.getUrl().regex(URL_DETAIL_REGEX).match()) {
             processEstate(page);
+        } else if(page.getUrl().regex(URL_SCHOOL_LIST_REGEX).match()) {
+            processSchoolList(page);
+        } else if(page.getUrl().regex(URL_SCHOOL_DETAIL_REGEX).match()) {
+            processSchoolDetail();
         } else if(page.getUrl().toString().equals("https://www.baidu.com"))  {
             //page.addTargetRequest("http://sh.lianjia.com/xiaoqu/rs浦电路50号");
             //fake url, read from DB
