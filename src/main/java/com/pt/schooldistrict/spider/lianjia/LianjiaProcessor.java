@@ -166,7 +166,7 @@ public class LianjiaProcessor implements PageProcessor{
         } else if(page.getUrl().regex(URL_SCHOOL_LIST_REGEX).match()) {
             processSchoolList(page);
         } else if(page.getUrl().regex(URL_SCHOOL_DETAIL_REGEX).match()) {
-            processSchoolDetail();
+            processSchoolDetail(page);
         } else if(page.getUrl().toString().equals("https://www.baidu.com"))  {
             //page.addTargetRequest("http://sh.lianjia.com/xiaoqu/rs浦电路50号");
             //fake url, read from DB
