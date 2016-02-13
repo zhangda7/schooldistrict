@@ -38,8 +38,35 @@ public class LianjiaProcessor implements PageProcessor{
     EstateDao estateDao=(EstateDao) ctx.getBean("estateDao");
 
     private void processSchoolList(Page page) {
-        //处理URL_SCHOOL_START_PAGE = "http://sh.lianjia.com/xuequfang/pudongxinqu/";开头的学校列表
 
+        //处理URL_SCHOOL_START_PAGE = "http://sh.lianjia.com/xuequfang/pudongxinqu/";开头的学校列表
+        String pageData = page.getHtml().xpath("/html/body/div[5]/div[2]/div/div/div[2]/@page-data").toString();
+        JSONObject json = (JSONObject) JSONObject.parse(pageData);
+        int totalPage = json.getInteger("totalPage");
+        int curPage = json.getInteger("curPage");
+        logger.info(String.format("TotalPage:%d, curPage:%d", totalPage, curPage));
+        if(++curPage <= totalPage) {
+            page.addTargetRequest(START_PAGE + "/pg" + String.valueOf(curPage));
+        }
+        logger.info(json.get("totalPage").toString());
+        ///html/body/div[5]/div[2]/div/div/div[1]/ul/li[1]/div/div[1]/div[1]/p[2]
+        logger.info(String.valueOf(page.getHtml().xpath("/html/body/div[5]/div[2]/div/div/div[1]/ul/li").nodes().size()));
+        for(Selectable url : page.getHtml().xpath("/html/body/div[5]/div[2]/div/div/div[1]/ul/li").nodes()) {
+            String link = url.xpath("li/div/h2/a/@href").toString();
+            String schoolName = url.xpath("li/div/h2/a/text()").toString();
+            String alise = url.xpath("li/div/div[1]/div[1]/p[1]/text()").toString();
+            String address = url.xpath("li/div/div[1]/div[1]/p[2]/text()").toString();
+            if(alise.indexOf("别名：") != -1) {
+                alise = alise.substring("别名：".length());
+            }
+            if(address.indexOf("地址：") != -1) {
+                address = address.substring("地址：".length());
+            }
+            //String address = url.xpath("li/div/div[1]/div[1]/p[2]/text()").toString();
+            logger.info(String.format("schoolName : %s, alise : %s, address:%s", schoolName, alise, address));
+
+            //page.addTargetRequest(url.xpath("li/div[2]/h2/a/@href").toString());
+        }
     }
 
     private void processSchoolDetail(Page page) {
@@ -202,8 +229,8 @@ public class LianjiaProcessor implements PageProcessor{
 
     public static void main(String[] args) {
         Spider.create(new LianjiaProcessor()).
-                //addUrl(START_PAGE).
-                addUrl("https://www.baidu.com"). // for update from DB
+                addUrl(URL_SCHOOL_START_PAGE).
+                //addUrl("https://www.baidu.com"). // for update from DB
                 addPipeline(new MyConsolePipeline()).
                 thread(5).run();
     }
