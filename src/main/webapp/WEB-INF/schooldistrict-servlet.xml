@@ -12,7 +12,7 @@
 	<mvc:annotation-driven />
 	<!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="prefix" value="/WEB-INF/" />
+		<property name="prefix" value="/pages/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
 
