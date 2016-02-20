@@ -1,14 +1,15 @@
 package com.pt.schooldistrict.web;
 
+import com.google.gson.Gson;
 import com.pt.schooldistrict.dao.SchoolDao;
 import com.pt.schooldistrict.model.School;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -16,9 +17,11 @@ import java.util.List;
 /**
  * Created by da.zhang on 16/2/13.
  */
-@Controller
+@RestController
 @RequestMapping("/school")
 public class SchoolController {
+
+    private Gson gson = new Gson();
 
     @Autowired
     private SchoolDao schoolDao;
@@ -29,7 +32,19 @@ public class SchoolController {
         return "xuequfang";
     }
 
-    @RequestMapping("/")
+    @ResponseBody
+    @RequestMapping(value = "/hello")
+    public String listAllUsers() {
+        List<School> schools = schoolDao.listAll();
+        if(schools.isEmpty()){
+            //return new ResponseEntity<List<School>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
+        }
+        String ret = "123";
+        return gson.toJson(schools);
+        //return new ResponseEntity<List<School>>(schools, HttpStatus.OK);
+    }
+
+    @RequestMapping("/www")
     public ModelAndView list(@RequestParam(value = "user", required = true) String user,
                              @CookieValue(value = "jsessionid", required = false) String jsession) {
         ModelAndView mav = new ModelAndView();
