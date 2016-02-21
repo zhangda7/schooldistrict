@@ -26,4 +26,6 @@ public interface EstateDao {
 
     List<Estate> selectBySchoolId(int schoolId);
 
+    Estate selectById(int id);
+
 }

@@ -1,13 +1,14 @@
 package com.pt.schooldistrict.model;
 
 import com.google.gson.Gson;
+import com.pt.schooldistrict.util.Util;
+
+import java.util.Date;
 
 /**
  * Created by da.zhang on 16/1/16.
  */
 public class House {
-
-    private static Gson gson = new Gson();
 
     public int getId() {
         return id;
@@ -51,6 +52,36 @@ public class House {
      * 该房子具体出售的URL
      */
     private String url;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getGmt_created() {
+        return gmt_created;
+    }
+
+    public void setGmt_created(Date gmt_created) {
+        this.gmt_created = gmt_created;
+    }
+
+    public Date getGmt_modified() {
+        return gmt_modified;
+    }
+
+    public void setGmt_modified(Date gmt_modified) {
+        this.gmt_modified = gmt_modified;
+    }
+
+    private String status;
+
+    private Date gmt_created;
+
+    private Date gmt_modified;
 
     public String getPageId() {
         return pageId;
@@ -141,7 +172,7 @@ public class House {
 
 
     public String toString() {
-        return gson.toJson(this);
+        return Util.toJson(this);
     }
 
 

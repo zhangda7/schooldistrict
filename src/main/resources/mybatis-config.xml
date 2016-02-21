@@ -10,6 +10,7 @@
   <typeAliases>
 		<typeAlias alias="Estate"			type="com.pt.schooldistrict.model.Estate"/>
         <typeAlias alias="House"			type="com.pt.schooldistrict.model.House"/>
+      <typeAlias alias="HouseHistory"			type="com.pt.schooldistrict.model.HouseHistory"/>
         <typeAlias alias="School"			type="com.pt.schooldistrict.model.School"/>
         <typeAlias alias="SchoolDistrict"			type="com.pt.schooldistrict.model.SchoolDistrict"/>
 	</typeAliases>
@@ -34,6 +35,7 @@
         <mapper resource="mapper/HouseMapper.xml"/>
         <mapper resource="mapper/SchoolMapper.xml"/>
         <mapper resource="mapper/SchoolDistrictMapper.xml"/>
+      <mapper resource="mapper/HouseHistoryMapper.xml"/>
   </mappers>
   
 </configuration>

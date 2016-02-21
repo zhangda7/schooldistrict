@@ -15,10 +15,14 @@ public interface HouseDao {
 
     void select(String name);
 
-    List<House> selectById(int id);
+    House selectById(int id);
 
     void deleteById(int id);
 
     List<House> selectByEstateId(int id);
+
+    void updateById(House house);
+
+    House selectByPageId(String pageId);
 
 }

@@ -16,6 +16,10 @@ PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         SELECT * FROM sd_estate where name = #{name} LIMIT 1
     </select>
 
+    <select id="selectById" resultType="Estate" parameterType="int">
+        SELECT * FROM sd_estate where id = #{id}
+    </select>
+
     <select id="selectByNameLike" resultType="Estate" parameterType="String">
         SELECT * FROM sd_estate where name LIKE "%"#{name}"%"
     </select>

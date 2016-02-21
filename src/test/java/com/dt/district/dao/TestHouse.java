@@ -2,11 +2,13 @@ package com.dt.district.dao;
 
 import com.pt.schooldistrict.dao.HouseDao;
 import com.pt.schooldistrict.model.House;
+import com.pt.schooldistrict.util.Constants;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,10 +35,8 @@ public class TestHouse {
     @Test
     public void testSelectByName() {
         HouseDao houseDao=(HouseDao) ctx.getBean("houseDao");
-        List<House> ess = houseDao.selectById(1);
-        for(House es : ess) {
-            System.out.println(es);
-        }
+        House ess = houseDao.selectById(3);
+        System.out.println(ess);
     }
 
     @Test
@@ -55,5 +55,17 @@ public class TestHouse {
         for(House es : ess) {
             System.out.println(es);
         }
+    }
+
+    @Test
+    public void testUpdateById() {
+        HouseDao houseDao=(HouseDao) ctx.getBean("houseDao");
+        House ess = houseDao.selectById(3);
+        ess.setGmt_created(new Date());
+        ess.setGmt_modified(new Date());
+        ess.setPrice(10);
+        ess.setStatus(Constants.HOUSE_STATUS_ONLINE);
+        houseDao.updateById(ess);
+
     }
 }

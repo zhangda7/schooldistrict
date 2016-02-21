@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.pt.schooldistrict.dao.HouseHistoryDao">
+
+
+
+    <insert id="insert" parameterType="HouseHistory">
+        INSERT INTO sd_house_history
+        (house_id, price, date, gmt_created, gmt_modified)
+        VALUES
+        (#{houseId}, #{price}, #{date}, now(), now())
+    </insert>
+
+
+
+</mapper>

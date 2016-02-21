@@ -14,7 +14,7 @@ public class Constants {
     /**
      * 链家的每个小区详细信息的列表
      */
-    public final static String URL_DETAIL_REGEX = "http://sh.lianjia.com/xiaoqu/\\d+/?$";
+    public final static String URL_ESTATE_DETAIL_REGEX = "http://sh.lianjia.com/xiaoqu/\\d+/?$";
     /**
      * 链家的每个小区二手房的列表
      */
@@ -23,5 +23,9 @@ public class Constants {
      * 每个出售的二手房的详细信息
      */
     public final static String URL_HOUSE_DETAIL_REGEX = "http://sh.lianjia.com/ershoufang/\\w*";
+
+    public final static String HOUSE_STATUS_ONLINE = "online";
+
+    public final static String HOUSE_STATUS_SOLD = "sold";
 
 }
