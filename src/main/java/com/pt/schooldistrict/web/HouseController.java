@@ -27,33 +27,28 @@ public class HouseController {
 
     @RequestMapping("/listHistory")
     public String listHistory(Model model) {
-        model.addAttribute("message", schoolDao.listAll().toString());
+        model.addAttribute("message", houseDao.listAll().toString());
         return "xuequfang";
     }
 
-    @ResponseBody
+    /*@ResponseBody
     @RequestMapping(value = "/hello")
     public String listAllUsers() {
-        List<School> schools = schoolDao.listAll();
+        List<School> schools = houseDao.listAll();
         if(schools.isEmpty()){
             //return new ResponseEntity<List<School>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
         }
         String ret = "123";
         return gson.toJson(schools);
         //return new ResponseEntity<List<School>>(schools, HttpStatus.OK);
-    }
+    }*/
 
     @RequestMapping("/www")
     public ModelAndView list(@RequestParam(value = "user", required = true) String user,
                              @CookieValue(value = "jsessionid", required = false) String jsession) {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("school");
-        List<School> schools = schoolDao.listAll();
-        StringBuilder sb = new StringBuilder();
-        for(School s : schools) {
-            sb.append(s.getName() + " | ");
-        }
-        mav.addObject("list", sb.toString());
+
         return mav;
 
     }

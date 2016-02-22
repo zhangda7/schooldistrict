@@ -124,6 +124,7 @@ public class HouseCronJob implements Job, PageProcessor {
         house.setPageId(getPageIdFromUrl(url));
         house.setType(page.getHtml().xpath("/html/body/div[5]/section[1]/div[2]/div[1]/dl[5]/dd/text()").toString());
         house.setEstateId(estateId);
+        house.setStatus(Constants.HOUSE_STATUS_ONLINE);
         House dbHouse = houseDao.selectByPageId(getPageIdFromUrl(url));
         if(dbHouse == null) {
             houseDao.insert(house);

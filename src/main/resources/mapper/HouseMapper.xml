@@ -22,9 +22,9 @@
 
     <insert id="insert" parameterType="House">
         INSERT INTO sd_house
-        (title, estate_id, price, area, type, buildYear, url, pageId, status)
+        (title, estate_id, price, area, type, buildYear, url, pageId, status, gmt_created, gmt_modified)
         VALUES
-        (#{title}, #{estateId}, #{price}, #{area}, #{type}, #{buildYear}, #{url}, #{pageId}, #{status})
+        (#{title}, #{estateId}, #{price}, #{area}, #{type}, #{buildYear}, #{url}, #{pageId}, #{status}, now(), now())
     </insert>
 
     <select id="listAll" resultMap="HouseMap">

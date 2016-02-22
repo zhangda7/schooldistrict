@@ -17,7 +17,7 @@ public class SchoolScheduler {
             JobDetail jobDetail = JobBuilder.newJob(HouseCronJob.class).withIdentity("job1", "group1").build();
 
             Trigger trigger = TriggerBuilder.newTrigger().withIdentity("trigger1", "group1").
-                    startNow().withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(11,30).inTimeZone(TimeZone.getDefault())).build();
+                    startNow().withSchedule(CronScheduleBuilder.dailyAtHourAndMinute(11,10).inTimeZone(TimeZone.getDefault())).build();
             //SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(5).withRepeatCount(5)).build();
 
             SchedulerFactory sf = new StdSchedulerFactory();
