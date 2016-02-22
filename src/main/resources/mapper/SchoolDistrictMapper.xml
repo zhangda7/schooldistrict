@@ -31,4 +31,9 @@
         WHERE school_id = #{schoolId} and estate_id = #{estateId} and district_id = #{districtId} and year = #{year}
     </select>
 
+    <select id="selectEstateBySchoolID" resultMap="SchoolDistrictMap" parameterType="int">
+        SELECT * FROM sd_schooldistrict
+        WHERE school_id = #{schoolId}
+    </select>
+
 </mapper>

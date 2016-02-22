@@ -27,6 +27,9 @@ public class HouseController {
 
     @RequestMapping("/listHistory")
     public String listHistory(Model model) {
+
+
+
         model.addAttribute("message", houseDao.listAll().toString());
         return "xuequfang";
     }

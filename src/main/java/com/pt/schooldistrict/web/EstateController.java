@@ -1,16 +1,13 @@
 package com.pt.schooldistrict.web;
 
 import com.google.gson.Gson;
+import com.pt.schooldistrict.dao.EstateDao;
 import com.pt.schooldistrict.dao.SchoolDao;
+import com.pt.schooldistrict.dao.SchoolDistrictDao;
+import com.pt.schooldistrict.model.Estate;
 import com.pt.schooldistrict.model.School;
 import com.pt.schooldistrict.util.Util;
-import com.sun.java.swing.ui.CommonUI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,31 +17,30 @@ import java.util.List;
  * Created by da.zhang on 16/2/13.
  */
 @RestController
-@RequestMapping("/school")
-public class SchoolController {
-
-    private Gson gson = new Gson();
+@RequestMapping("/estate")
+public class EstateController {
 
     @Autowired
     private SchoolDao schoolDao;
 
+    @Autowired
+    private SchoolDistrictDao schoolDistrictDao;
+
+    @Autowired
+    private EstateDao estateDao;
+
     @RequestMapping("/")
-    public String listAllSchool() {
-        List<School> schools = schoolDao.listAll();
-        return Util.toJson(schools);
+    public String listBySchoolId(@RequestParam(value = "id", defaultValue = "0") int id) {
+        if(id == 0) {
+            return Util.toJson(estateDao.listAll());
+        } else {
+            List<Estate> estates = estateDao.selectBySchoolId(id);
+            return Util.toJson(estates);
+        }
+
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/hello")
-    public String listAllUsers() {
-        List<School> schools = schoolDao.listAll();
-        if(schools.isEmpty()){
-            //return new ResponseEntity<List<School>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
-        }
-        String ret = "123";
-        return gson.toJson(schools);
-        //return new ResponseEntity<List<School>>(schools, HttpStatus.OK);
-    }
+
 
     @RequestMapping("/www")
     public ModelAndView list(@RequestParam(value = "user", required = true) String user,
