@@ -20,6 +20,10 @@
         SELECT * FROM sd_house where pageId = #{pageId}
     </select>
 
+    <select id="selectOnlineByPageId" resultType="House" parameterType="String">
+        SELECT * FROM sd_house where pageId = #{pageId} and status = "online"
+    </select>
+
     <insert id="insert" parameterType="House">
         INSERT INTO sd_house
         (title, estate_id, price, area, type, buildYear, url, pageId, status, gmt_created, gmt_modified)
@@ -38,6 +42,11 @@
     <select id="selectByEstateId" resultMap="HouseMap" parameterType="int">
         SELECT * FROM sd_house WHERE sd_house.`estate_id` = #{estateId} ORDER BY sd_house.price;
     </select>
+
+    <update id="updateEstateStatus" parameterType="int">
+        UPDATE sd_house SET status = "gone", gmt_modified = now()
+        WHERE status = "online" and estate_id = #{estateId}
+    </update>
 
     <update id="updateById" parameterType="House">
         UPDATE sd_house

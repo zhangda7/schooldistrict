@@ -68,4 +68,12 @@ public class TestHouse {
         houseDao.updateById(ess);
 
     }
+
+    @Test
+    public void testUpdateStatus() {
+        HouseDao houseDao = (HouseDao) ctx.getBean("houseDao");
+        //houseDao.updateEstateStatus(165);
+        House house = houseDao.selectOnlineByPageId("SH0001096683");
+        System.out.println(house);
+    }
 }

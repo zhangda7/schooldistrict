@@ -29,6 +29,13 @@ import java.util.logging.Logger;
  * 2.遍历estate,看有没有已经被删除的house,如果有,更新db中相应house的信息
  * 3.查询当前所有存在的房子,比对价格,如果价格有了变化(增加/减少),记录到logDB中
  * Note:为了减少爬链家的次数,上面的操作只是在estate列表页就可以做完,通过house的URL作为一个house的唯一主键,不用再爬house的详细信息页面
+ *
+ * 更新房子状态的逻辑:
+ * 1.处理一个小区时,将其现在所有online的房子都改成gone
+ * 2.获取里面每条列表,如果发现有pageId相同的,设为online,该新增的还是新增.这个简单的逻辑就可以,即使这一次全置为gone后,craw的任务全挂,
+ * 使得房子状态还是gone,但下次启动时仍然有机会把房子状态重新置为online
+ * 3.每次置为gone时只找online的,这样以前的gone就还是保存着当时的gmt_modified
+ *
  */
 public class HouseCronJob implements Job, PageProcessor {
     private Logger logger = Logger.getLogger(HouseCronJob.class.getCanonicalName());
@@ -52,12 +59,18 @@ public class HouseCronJob implements Job, PageProcessor {
         String pageData = page.getHtml().xpath("/html/body/div[5]/div[2]/div/div[2]/div/@page-data").toString();
         JSONObject json = (JSONObject) JSONObject.parse(pageData);
         if(json != null) {
+            //说明有分页信息,处理分页
             int totalPage = json.getInteger("totalPage");
             int curPage = json.getInteger("curPage");
             logger.info(String.format("TotalPage:%d, curPage:%d", totalPage, curPage));
             String curUrl = page.getUrl().toString();
-            curUrl = curUrl.substring(0, curUrl.length() - 1);
-            curUrl = curUrl.substring(0, curUrl.lastIndexOf('/'));
+            //这里的分页有个小的问题,格式必须完全是http://sh.lianjia.com/xiaoqu/5011000017872/esf/pg1才可以
+            //之所以要做substring,是防止重复添加pg到尾端
+            if(curUrl.indexOf("pg") >= 0) {
+                curUrl = curUrl.substring(0, curUrl.length() - 1);
+                curUrl = curUrl.substring(0, curUrl.lastIndexOf('/'));
+            }
+
             logger.info("Cururl:" + curUrl);
             if(++curPage <= totalPage) {
                 page.addTargetRequest(curUrl + "/pg" + String.valueOf(curPage));
@@ -76,6 +89,11 @@ public class HouseCronJob implements Job, PageProcessor {
                 //DB中没有,表明是新房
                 page.addTargetRequest(houseUrl);
             } else {
+                if(house.getStatus().equals(Constants.HOUSE_STATUS_GONE)) {
+                    //遇到状态是gone的,就更新状态为online
+                    house.setStatus(Constants.HOUSE_STATUS_ONLINE);
+                    houseDao.updateById(house);
+                }
                 if(house.getPrice() != Integer.parseInt(price)) {
                     //价格不等时,将现有的价格插入househistory
                     HouseHistory houseHistory = new HouseHistory();
@@ -153,11 +171,15 @@ public class HouseCronJob implements Job, PageProcessor {
         List<SchoolDistrict> schoolDistricts = schoolDistrictDao.listAll();
         for(SchoolDistrict schoolDistrict : schoolDistricts) {
             Estate estate = estateDao.selectById(schoolDistrict.getEstateId());
-            page.addTargetRequest(estate.getUrl() + "esf/");
-            //break;
+            //更新该estate的online的house的状态为gone
+            houseDao.updateEstateStatus(estate.getId());
+            //一定要在最后加上esf/pg1,不加pg1的话分页有问题
+            page.addTargetRequest(estate.getUrl() + "esf/pg1");
+            break;
         }
         //for single test
-        //page.addTargetRequest("http://sh.lianjia.com/xiaoqu/5011000017872/esf/");
+        //houseDao.updateEstateStatus(161);
+        //page.addTargetRequest("http://sh.lianjia.com/xiaoqu/5011000017872/esf/pg1");
     }
 
     @Override

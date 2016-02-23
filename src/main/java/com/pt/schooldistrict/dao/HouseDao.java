@@ -25,4 +25,12 @@ public interface HouseDao {
 
     House selectByPageId(String pageId);
 
+    House selectOnlineByPageId(String pageId);
+
+    /**
+     * 更新一个estateId内的所有状态是online的house至gone状态
+     * @param estateId
+     */
+    void updateEstateStatus(int estateId);
+
 }

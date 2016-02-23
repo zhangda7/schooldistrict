@@ -18,7 +18,7 @@ public class Constants {
     /**
      * 链家的每个小区二手房的列表
      */
-    public final static String URL_ONSALE_LIST_REGEX = "http://sh.lianjia.com/xiaoqu/\\d+/esf/?";
+    public final static String URL_ONSALE_LIST_REGEX = "http://sh.lianjia.com/xiaoqu/\\d+/esf/*";
     /**
      * 每个出售的二手房的详细信息
      */
@@ -26,6 +26,14 @@ public class Constants {
 
     public final static String HOUSE_STATUS_ONLINE = "online";
 
+    /**
+     * 这个需要访问具体的页面才能确保一个房子已卖出
+     */
     public final static String HOUSE_STATUS_SOLD = "sold";
+
+    /**
+     * 房子已不在线,代表已卖出或下架
+     */
+    public final static String HOUSE_STATUS_GONE = "gone";
 
 }
