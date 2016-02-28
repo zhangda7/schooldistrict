@@ -175,7 +175,7 @@ public class HouseCronJob implements Job, PageProcessor {
             houseDao.updateEstateStatus(estate.getId());
             //一定要在最后加上esf/pg1,不加pg1的话分页有问题
             page.addTargetRequest(estate.getUrl() + "esf/pg1");
-            break;
+            //break;
         }
         //for single test
         //houseDao.updateEstateStatus(161);

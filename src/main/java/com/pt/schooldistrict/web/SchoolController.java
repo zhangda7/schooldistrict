@@ -14,35 +14,39 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by da.zhang on 16/2/13.
  */
 @RestController
-@RequestMapping("/school")
+//@RequestMapping("/")
 public class SchoolController {
 
-    private Gson gson = new Gson();
+    private Logger logger = Logger.getLogger(SchoolController.class.getName());
 
     @Autowired
     private SchoolDao schoolDao;
 
-    @RequestMapping("/")
-    public String listAllSchool() {
-        List<School> schools = schoolDao.listAll();
-        return Util.toJson(schools);
+    @RequestMapping("/index.html")
+    public ModelAndView listAllSchool() {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("school");
+        return mav;
     }
 
     @ResponseBody
-    @RequestMapping(value = "/hello")
-    public String listAllUsers() {
+    @RequestMapping(value = "/schoolList.json", method=RequestMethod.GET, produces = "application/json; charset=utf-8")
+    public String listAllSchools() throws UnsupportedEncodingException {
         List<School> schools = schoolDao.listAll();
         if(schools.isEmpty()){
             //return new ResponseEntity<List<School>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
         }
-        String ret = "123";
-        return gson.toJson(schools);
+        String ret = "中文";
+        logger.info(Util.toJson(schools));
+        return Util.toJson(schools);
         //return new ResponseEntity<List<School>>(schools, HttpStatus.OK);
     }
 

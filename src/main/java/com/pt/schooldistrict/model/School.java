@@ -1,5 +1,7 @@
 package com.pt.schooldistrict.model;
 
+import com.pt.schooldistrict.util.Util;
+
 /**
  * Created by da.zhang on 16/1/28.
  */
@@ -84,6 +86,11 @@ public class School {
     }
 
     private String comment;
+
+    @Override
+    public String toString() {
+        return Util.toJson(this);
+    }
 
 
 }
