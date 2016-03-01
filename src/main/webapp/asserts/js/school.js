@@ -43,8 +43,8 @@ var SchoolList = React.createClass({
             this.state.schools.map(function (row,i) {   //这里因为data是个数组，所以可以用map来遍历
               return (
                   <tr key={i}>  // map里每一个顶层好像必须有一个key element，没有的话也可以，但会有warning
-                    <td>{row.id}</td>  //取特定的值
-                    <td>{row.name}</td>
+                    <td>{row.name}</td>  //取特定的值
+                    <td>{row.address}</td>
                   </tr>
               );
             })
