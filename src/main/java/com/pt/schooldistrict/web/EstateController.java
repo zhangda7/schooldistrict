@@ -29,10 +29,12 @@ public class EstateController {
     @Autowired
     private EstateDao estateDao;
 
-    @RequestMapping("/")
+    @ResponseBody
+    @RequestMapping(value = "/list.html", method=RequestMethod.GET, produces = "application/json; charset=utf-8")
     public String listBySchoolId(@RequestParam(value = "id", defaultValue = "0") int id) {
         if(id == 0) {
-            return Util.toJson(estateDao.listAll());
+            return "empty";
+            //return Util.toJson(estateDao.listAll());
         } else {
             List<Estate> estates = estateDao.selectBySchoolId(id);
             return Util.toJson(estates);

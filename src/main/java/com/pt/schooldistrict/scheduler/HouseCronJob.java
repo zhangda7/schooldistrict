@@ -82,6 +82,10 @@ public class HouseCronJob implements Job, PageProcessor {
             logger.info(url.xpath("li/div[2]/h2/a/text()").toString());
             String houseUrl = url.xpath("li/div[2]/h2/a/@href").toString();
             String price = url.xpath("li/div[2]/div[2]/div[1]/span/text()").toString();
+            if(price == null) {
+                continue;
+            }
+            int houseProce = (int)Double.parseDouble(price);
             String pageId = getPageIdFromUrl(houseUrl);
             House house = houseDao.selectByPageId(pageId);
             logger.info(String.format("%s Hosue href = %s", LOG_TAG, houseUrl));
@@ -94,7 +98,7 @@ public class HouseCronJob implements Job, PageProcessor {
                     house.setStatus(Constants.HOUSE_STATUS_ONLINE);
                     houseDao.updateById(house);
                 }
-                if(house.getPrice() != Integer.parseInt(price)) {
+                if(house.getPrice() != houseProce) {
                     //价格不等时,将现有的价格插入househistory
                     HouseHistory houseHistory = new HouseHistory();
                     houseHistory.setHouseId(house.getId());
@@ -132,7 +136,7 @@ public class HouseCronJob implements Job, PageProcessor {
         String estatePageId = estateUrl.substring(estateUrl.lastIndexOf('/') + 1, estateUrl.length());
         int estateId = estateDao.selectByPageId(estatePageId).getId();
         house.setTitle(page.getHtml().xpath("/html/body/div[5]/div[1]/div[1]/h1/text()").toString());
-        house.setPrice(Integer.parseInt(page.getHtml().
+        house.setPrice((int)Double.parseDouble(page.getHtml().
                 xpath("/html/body/div[5]/section[1]/div[2]/div[1]/dl[1]/dd/span/strong/text()").toString()));
         String area = page.getHtml().xpath("/html/body/div[5]/section[1]/div[2]/div[1]/dl[1]/dd/span/i/text()").toString();
         house.setArea(Float.parseFloat(area.substring(2, area.length() - 1)));
