@@ -41,7 +41,6 @@
 
 	<servlet-mapping>
 		<servlet-name>schooldistrict</servlet-name>
-		<url-pattern>*.html</url-pattern>
 		<url-pattern>*.json</url-pattern>
 	</servlet-mapping>
 

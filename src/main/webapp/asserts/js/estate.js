@@ -1,3 +1,10 @@
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+}
+
+
 var SchoolList = React.createClass({
   getInitialState: function() {
     return {
@@ -31,7 +38,7 @@ var SchoolList = React.createClass({
           <thead>
           <tr>
             <th>
-              学校名称
+              小区名称
             </th>
             <th>
               地址
@@ -42,7 +49,7 @@ var SchoolList = React.createClass({
           {
             this.state.schools.map(function (row,i) {   //这里因为data是个数组，所以可以用map来遍历
               return (
-                  <tr key={i}>  // map里每一个顶层好像必须有一个key element，没有的话也可以，但会有warning
+                  <tr key={i}>
                     <td><a href="#" >{row.name}</a></td>  //取特定的值
                     <td>{row.address}</td>
                   </tr>
@@ -54,7 +61,11 @@ var SchoolList = React.createClass({
   }
 });
 
-ReactDOM.render(
-    <SchoolList source="/schoolList.json" />,
-    document.getElementById("example")
-);
+$(document).ready(function() {
+    var estateID = getQueryString("id");
+    ReactDOM.render(
+        <SchoolList source={"/estate/estatelist.json?id=" + estateID} />,
+        document.getElementById("example")
+    );
+});
+

@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by da.zhang on 16/2/13.
@@ -19,6 +21,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/estate")
 public class EstateController {
+
+    private Logger logger = Logger.getLogger(EstateController.class.getName());
 
     @Autowired
     private SchoolDao schoolDao;
@@ -30,7 +34,7 @@ public class EstateController {
     private EstateDao estateDao;
 
     @ResponseBody
-    @RequestMapping(value = "/list.html", method=RequestMethod.GET, produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/estatelist.json", method=RequestMethod.GET, produces = "application/json; charset=utf-8")
     public String listBySchoolId(@RequestParam(value = "id", defaultValue = "0") int id) {
         if(id == 0) {
             return "empty";
@@ -42,7 +46,13 @@ public class EstateController {
 
     }
 
-
+    @RequestMapping("/list.html")
+    public ModelAndView listAllSchool(@RequestParam(value = "id", defaultValue = "0") int id) {
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("estate");
+        mav.addObject("id", id);
+        return mav;
+    }
 
     @RequestMapping("/www")
     public ModelAndView list(@RequestParam(value = "user", required = true) String user,

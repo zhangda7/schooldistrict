@@ -4,7 +4,10 @@ import com.google.gson.Gson;
 import com.pt.schooldistrict.dao.HouseDao;
 import com.pt.schooldistrict.dao.HouseHistoryDao;
 import com.pt.schooldistrict.dao.SchoolDao;
+import com.pt.schooldistrict.model.Estate;
+import com.pt.schooldistrict.model.House;
 import com.pt.schooldistrict.model.School;
+import com.pt.schooldistrict.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +35,19 @@ public class HouseController {
 
         model.addAttribute("message", houseDao.listAll().toString());
         return "xuequfang";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/list.json", method=RequestMethod.GET, produces = "application/json; charset=utf-8")
+    public String listBySchoolId(@RequestParam(value = "id", defaultValue = "0") int id) {
+        if(id == 0) {
+            return Util.toJson("empty");
+            //return Util.toJson(estateDao.listAll());
+        } else {
+            List<House> houses = houseDao.selectByEstateId(id);
+            return Util.toJson(houses);
+        }
+
     }
 
     /*@ResponseBody
