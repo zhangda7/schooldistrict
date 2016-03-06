@@ -58,6 +58,15 @@ public class TestHouse {
     }
 
     @Test
+    public void testSelectOnlineByEstateId() {
+        HouseDao houseDao=(HouseDao) ctx.getBean("houseDao");
+        List<House> ess = houseDao.selectOnlineByEstateId(253);
+        for(House es : ess) {
+            System.out.println(es);
+        }
+    }
+
+    @Test
     public void testUpdateById() {
         HouseDao houseDao=(HouseDao) ctx.getBean("houseDao");
         House ess = houseDao.selectById(3);

@@ -1,16 +1,9 @@
 package com.pt.schooldistrict.web;
 
-import com.google.gson.Gson;
 import com.pt.schooldistrict.dao.SchoolDao;
 import com.pt.schooldistrict.model.School;
 import com.pt.schooldistrict.util.Util;
-import com.sun.java.swing.ui.CommonUI;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,7 +26,7 @@ public class SchoolController {
     @RequestMapping("/index.html")
     public ModelAndView listAllSchool() {
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("school");
+        mav.setViewName("/pages/school.html");
         return mav;
     }
 
@@ -54,7 +47,7 @@ public class SchoolController {
     public ModelAndView list(@RequestParam(value = "user", required = true) String user,
                              @CookieValue(value = "jsessionid", required = false) String jsession) {
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("school");
+        mav.setViewName("/pages/school.html");
         List<School> schools = schoolDao.listAll();
         StringBuilder sb = new StringBuilder();
         for(School s : schools) {

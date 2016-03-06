@@ -21,6 +21,8 @@ public interface HouseDao {
 
     List<House> selectByEstateId(int id);
 
+    List<House> selectOnlineByEstateId(int id);
+
     void updateById(House house);
 
     House selectByPageId(String pageId);

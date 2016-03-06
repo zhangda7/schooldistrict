@@ -1,6 +1,5 @@
 package com.pt.schooldistrict.web;
 
-import com.google.gson.Gson;
 import com.pt.schooldistrict.dao.EstateDao;
 import com.pt.schooldistrict.dao.SchoolDao;
 import com.pt.schooldistrict.dao.SchoolDistrictDao;
@@ -11,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -49,7 +47,7 @@ public class EstateController {
     @RequestMapping("/list.html")
     public ModelAndView listAllSchool(@RequestParam(value = "id", defaultValue = "0") int id) {
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("estate");
+        mav.setViewName("/pages/estate.html");
         mav.addObject("id", id);
         return mav;
     }
@@ -58,7 +56,7 @@ public class EstateController {
     public ModelAndView list(@RequestParam(value = "user", required = true) String user,
                              @CookieValue(value = "jsessionid", required = false) String jsession) {
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("school");
+        mav.setViewName("/pages/school.html");
         List<School> schools = schoolDao.listAll();
         StringBuilder sb = new StringBuilder();
         for(School s : schools) {

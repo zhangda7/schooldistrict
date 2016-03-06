@@ -8,37 +8,27 @@ function getQueryString(name) {
 var SchoolList = React.createClass({
     getInitialState: function() {
         return {
-            schools : []
+            houses : []
         };
     },
 
     componentDidMount: function() {
-        /*$.ajax({
-         url: this.props.source,
-         success: function(data) {
-         console.log(data);
-
-         this.setState({schools: data});
-         }.bind(this),
-         error: function(xhr, status, err) {
-         console.error(err.toString());
-         }.bind(this)
-         });*/
-
         $.get(this.props.source, function(result) {
             console.log(result);
-            this.setState({schools : result});
+            this.setState({houses : result});
         }.bind(this));
     },
 
     render: function() {
         //console.log(this.state.schools);
         return (
+            <div>
+                <p>共{this.state.houses.length}套房子在售</p>
             <table className="table table-bordered table-striped">
                 <thead>
                 <tr>
                     <th>
-                        小区名称
+                        标题
                     </th>
                     <th>
                         面积
@@ -46,29 +36,37 @@ var SchoolList = React.createClass({
                     <th>
                         价格
                     </th>
+                    <th>
+                        户型
+                    </th>
+                    <th>
+                        最后更新时间
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
                 {
-                    this.state.schools.map(function (row,i) {   //这里因为data是个数组，所以可以用map来遍历
+                    this.state.houses.map(function (row,i) {   //这里因为data是个数组，所以可以用map来遍历
                         return (
                             <tr key={i}>
-                                <td><a href="#" >{row.title}</a></td>  //取特定的值
+                                <td><a href={row.url} >{row.title}</a></td>  //取特定的值
                                 <td>{row.area}</td>
                                 <td>{row.price}</td>
+                                <td>{row.type}</td>
+                                <td>{row.gmt_modified}</td>
                             </tr>
                         );
                     })
                 }
-                </tbody></table>
+                </tbody></table></div>
         );
     }
 });
 
 $(document).ready(function() {
-    var estateID = getQueryString("id");
+    var houseID = getQueryString("id");
     ReactDOM.render(
-        <SchoolList source={"/house/list.json?id=" + estateID} />,
+        <SchoolList source={"/house/list.json?id=" + houseID} />,
         document.getElementById("example")
     );
 });

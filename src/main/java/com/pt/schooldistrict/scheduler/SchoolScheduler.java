@@ -37,8 +37,8 @@ public class SchoolScheduler {
     }
 
     public static void main(String[] args) {
-        //testOneRound();
-        startQuartz();
+        testOneRound();
+        //startQuartz();
     }
 
 }

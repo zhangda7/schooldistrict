@@ -43,7 +43,7 @@ var SchoolList = React.createClass({
             this.state.schools.map(function (row,i) {   //这里因为data是个数组，所以可以用map来遍历
               return (
                   <tr key={i}>
-                    <td><a href={"/pages/estate.jsp?id=" + row.id} >{row.name}</a></td>  //取特定的值
+                    <td><a href={"/pages/estate.html?id=" + row.id} >{row.name}</a></td>  //取特定的值
                     <td>{row.address}</td>
                   </tr>
               );

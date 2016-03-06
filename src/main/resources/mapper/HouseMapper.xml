@@ -43,6 +43,10 @@
         SELECT * FROM sd_house WHERE sd_house.`estate_id` = #{estateId} ORDER BY sd_house.price;
     </select>
 
+    <select id="selectOnlineByEstateId" resultType="House" parameterType="int">
+        SELECT * FROM sd_house WHERE sd_house.`estate_id` = #{estateId} and status='online' ORDER BY sd_house.price;
+    </select>
+
     <update id="updateEstateStatus" parameterType="int">
         UPDATE sd_house SET status = "gone", gmt_modified = now()
         WHERE status = "online" and estate_id = #{estateId}
