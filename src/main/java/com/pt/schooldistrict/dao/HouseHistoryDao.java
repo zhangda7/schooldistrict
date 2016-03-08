@@ -12,5 +12,7 @@ public interface HouseHistoryDao {
 
     void insert(HouseHistory houseHistory);
 
-    List<House> listAllHouse();
+    List<HouseHistory> selectByEstateId(int estateId);
+
+    List<HouseHistory> selectByHouseId(int houseId);
 }

@@ -4,7 +4,40 @@
         "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.pt.schooldistrict.dao.HouseHistoryDao">
 
+    <resultMap id="HouseHistoryMap" type="HouseHistory">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+    </resultMap>
 
+    <select id="selectAllByEstateId" resultType="HouseHistory" parameterType="int">
+        SELECT
+        estate.id, estate.name , estate.url,
+        history.price, history.gmt_created, history.gmt_modified,
+        house.id as house_id, house.url as house_url
+        FROM
+        sd_house as house, sd_house_history as history, sd_estate as estate
+        where
+        history.house_id = house.id and house.estate_id = #{estateId}
+        ORDER BY house_id, gmt_created;
+    </select>
+
+    <select id="selectByEstateId" resultType="HouseHistory" parameterType="int">
+        SELECT
+        history.price, history.gmt_created, history.gmt_modified
+        FROM
+        sd_house as house, sd_house_history as history
+        where
+        history.house_id = house.id and house.estate_id = #{estateId}
+        ORDER BY house_id, gmt_created;
+    </select>
+
+    <select id="selectByHouseId" resultType="HouseHistory" parameterType="int">
+        SELECT * FROM
+        sd_house_history
+        where
+        house_id = #{houseId}
+        ORDER BY house_id, gmt_created;
+    </select>
 
     <insert id="insert" parameterType="HouseHistory">
         INSERT INTO sd_house_history
