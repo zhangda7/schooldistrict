@@ -9,11 +9,44 @@
         <result property="name" column="name"/>
         <result property="averagePrice" column="averagePrice"/>
         <result property="buildYear" column="built"/>
-        <result property="district" column="district"/>
+    </resultMap>
+
+    <resultMap id="HouseMapWithHistory" type="House">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="price" column="price"/>
+        <result property="name" column="name"/>
+        <result property="area" column="area"/>
+        <result property="type" column="type"/>
+        <!--<collection property="houseHistoryList" javaType="java.util.List" ofType="HouseHistory">
+            <id column="id" property="id" jdbcType="INTEGER" />
+            <result column="price" property="price" jdbcType="INTEGER" />
+            <result column="date" property="date" jdbcType="DATE" />
+            <result column="gmt_created" property="gmtCreated" jdbcType="DATE" />
+            <result column="gmt_modified" property="gmtModified" jdbcType="DATE" />
+        </collection>-->
+        <collection property="houseHistoryList" javaType="java.util.List" ofType="HouseHistory" column="id" select="getHistoryByHouseId">
+        </collection>
+    </resultMap>
+
+    <resultMap id="HouseHistoryMap" type="HouseHistory">
+        <id property="id" column="id"/>
     </resultMap>
 
     <select id="selectById" resultType="House" parameterType="int">
         SELECT * FROM sd_house where id =#{id}
+    </select>
+
+    <select id="getHistoryByHouseId" resultType="HouseHistory" parameterType="int">
+        SELECT * FROM sd_house_history where house_id =#{id}
+    </select>
+
+    <select id="selectByIdWithHistory" resultType="House" parameterType="int">
+        SELECT * FROM
+        sd_house_history
+        where
+        house_id = #{id}
+        ORDER BY house_id, gmt_created;
     </select>
 
     <select id="selectByPageId" resultType="House" parameterType="String">
@@ -39,8 +72,11 @@
         DELETE FROM sd_house WHERE id = #{ID}
     </delete>
 
-    <select id="selectByEstateId" resultMap="HouseMap" parameterType="int">
+    <select id="selectByEstateId" resultMap="HouseMapWithHistory" parameterType="int">
         SELECT * FROM sd_house WHERE sd_house.`estate_id` = #{estateId} ORDER BY sd_house.price;
+        <!--SELECT * FROM sd_house house
+        LEFT OUTER JOIN sd_house_history history ON house.id = history.house_id
+        WHERE house.estate_id = #{estateId} and house.id = 210 ORDER BY house.price;-->
     </select>
 
     <select id="selectOnlineByEstateId" resultType="House" parameterType="int">

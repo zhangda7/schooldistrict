@@ -3,6 +3,7 @@ package com.dt.district.dao;
 import com.pt.schooldistrict.dao.HouseDao;
 import com.pt.schooldistrict.model.House;
 import com.pt.schooldistrict.util.Constants;
+import com.pt.schooldistrict.util.Util;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -51,10 +52,18 @@ public class TestHouse {
     @Test
     public void testSelectByEstateId() {
         HouseDao houseDao=(HouseDao) ctx.getBean("houseDao");
-        List<House> ess = houseDao.selectByEstateId(210);
+        List<House> ess = houseDao.selectByEstateId(161);
         for(House es : ess) {
-            System.out.println(es);
+            System.out.println(es.getHouseHistoryList().size());
+            System.out.println(Util.toJson(es));
         }
+    }
+
+    @Test
+    public void testSelectById() {
+        HouseDao houseDao=(HouseDao) ctx.getBean("houseDao");
+        House es = houseDao.selectById(11846);
+        System.out.println(es);
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.pt.schooldistrict.util.Util;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by da.zhang on 16/1/16.
@@ -19,6 +20,16 @@ public class House {
     }
 
     private int id;
+
+    public List<HouseHistory> getHouseHistoryList() {
+        return houseHistoryList;
+    }
+
+    public void setHouseHistoryList(List<HouseHistory> houseHistoryList) {
+        this.houseHistoryList = houseHistoryList;
+    }
+
+    private List<HouseHistory> houseHistoryList;
 
     public String getTitle() {
         return title;
