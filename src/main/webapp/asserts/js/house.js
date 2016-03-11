@@ -4,6 +4,19 @@ function getQueryString(name) {
     if (r != null) return unescape(r[2]); return null;
 }
 
+function getHistory(historyList) {
+    if(historyList == null || historyList.length == 0) {
+        return "暂无价格趋势";
+    }
+    var result = "";
+    for(var i = 0; i < historyList.length - 1; i++) {
+        console.log(historyList[i]);
+        result += historyList[i].price + " -> ";
+    }
+    result += historyList[historyList.length - 1].price;
+    return result;
+}
+
 
 var SchoolList = React.createClass({
     getInitialState: function() {
@@ -42,6 +55,9 @@ var SchoolList = React.createClass({
                     <th>
                         最后更新时间
                     </th>
+                    <th>
+                        历史价格趋势
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -54,6 +70,7 @@ var SchoolList = React.createClass({
                                 <td>{row.price}</td>
                                 <td>{row.type}</td>
                                 <td>{row.gmt_modified}</td>
+                                <td>{getHistory(row.houseHistoryList)}</td>
                             </tr>
                         );
                     })

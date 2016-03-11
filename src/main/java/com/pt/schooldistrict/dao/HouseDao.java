@@ -17,8 +17,6 @@ public interface HouseDao {
 
     House selectById(int id);
 
-    House selectByIdWithHistory(int id);
-
     void deleteById(int id);
 
     List<House> selectByEstateId(int id);

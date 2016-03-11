@@ -29,9 +29,6 @@
         </collection>
     </resultMap>
 
-    <resultMap id="HouseHistoryMap" type="HouseHistory">
-        <id property="id" column="id"/>
-    </resultMap>
 
     <select id="selectById" resultType="House" parameterType="int">
         SELECT * FROM sd_house where id =#{id}
@@ -79,7 +76,7 @@
         WHERE house.estate_id = #{estateId} and house.id = 210 ORDER BY house.price;-->
     </select>
 
-    <select id="selectOnlineByEstateId" resultType="House" parameterType="int">
+    <select id="selectOnlineByEstateId" resultMap="HouseMapWithHistory" parameterType="int">
         SELECT * FROM sd_house WHERE sd_house.`estate_id` = #{estateId} and status='online' ORDER BY sd_house.price;
     </select>
 
