@@ -80,8 +80,9 @@
         SELECT * FROM sd_house WHERE sd_house.`estate_id` = #{estateId} and status='online' ORDER BY sd_house.price;
     </select>
 
+    <!-- 批量更新一个小区的房屋状态,为每日更新使用,但此接口不应更改gmt_modified-->
     <update id="updateEstateStatus" parameterType="int">
-        UPDATE sd_house SET status = "gone", gmt_modified = now()
+        UPDATE sd_house SET status = "gone"
         WHERE status = "online" and estate_id = #{estateId}
     </update>
 
@@ -113,6 +114,17 @@
                 status = #{status, jdbcType=VARCHAR},
             </if>
             gmt_modified = now()
+        </set>
+        WHERE id = #{id, jdbcType=INTEGER}
+    </update>
+
+    <!-- 仅供cron job使用的接口,仅更新一个房子的status,不更改gmt_modified-->
+    <update id="updateStatusById" parameterType="House">
+        UPDATE sd_house
+        <set>
+            <if test="status != null">
+                status = #{status, jdbcType=VARCHAR}
+            </if>
         </set>
         WHERE id = #{id, jdbcType=INTEGER}
     </update>

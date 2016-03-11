@@ -96,7 +96,7 @@ public class HouseCronJob implements Job, PageProcessor {
                 if(house.getStatus().equals(Constants.HOUSE_STATUS_GONE)) {
                     //遇到状态是gone的,就更新状态为online
                     house.setStatus(Constants.HOUSE_STATUS_ONLINE);
-                    houseDao.updateById(house);
+                    houseDao.updateStatusById(house);
                 }
                 if(house.getPrice() != houseProce) {
                     //价格不等时,将现有的价格插入househistory

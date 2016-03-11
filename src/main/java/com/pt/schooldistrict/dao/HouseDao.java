@@ -35,4 +35,6 @@ public interface HouseDao {
      */
     void updateEstateStatus(int estateId);
 
+    void updateStatusById(House house);
+
 }
