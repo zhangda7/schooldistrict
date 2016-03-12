@@ -1,11 +1,11 @@
 package com.pt.schooldistrict.scheduler;
 
-import com.pt.schooldistrict.MyConsolePipeline;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import us.codecraft.webmagic.Spider;
 
-import java.util.TimeZone;
+import java.util.*;
+import java.util.Calendar;
 
 /**
  * Created by da.zhang on 16/2/20.
@@ -13,6 +13,10 @@ import java.util.TimeZone;
 public class SchoolScheduler {
 
     public static void startQuartz() {
+        Calendar calendar = Calendar.getInstance();
+        if(calendar.get(Calendar.HOUR_OF_DAY) > 11) {
+            testOneRound();
+        }
         try {
             JobDetail jobDetail = JobBuilder.newJob(HouseCronJob.class).withIdentity("job1", "group1").build();
 

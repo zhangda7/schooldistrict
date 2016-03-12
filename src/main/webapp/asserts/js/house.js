@@ -11,9 +11,9 @@ function getHistory(historyList) {
     var result = "";
     for(var i = 0; i < historyList.length - 1; i++) {
         console.log(historyList[i]);
-        result += historyList[i].price + " -> ";
+        result += "(" + historyList[i].date + " - " + historyList[i].price  + ") --> ";
     }
-    result += historyList[historyList.length - 1].price;
+    result += "(" + historyList[historyList.length - 1].date + " - " + historyList[historyList.length - 1].price;
     return result;
 }
 
