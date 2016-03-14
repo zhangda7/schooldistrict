@@ -141,6 +141,7 @@ public class HouseCronJob implements Job, PageProcessor {
         String area = page.getHtml().xpath("/html/body/div[5]/section[1]/div[2]/div[1]/dl[1]/dd/span/i/text()").toString();
         house.setArea(Float.parseFloat(area.substring(2, area.length() - 1)));
         house.setUrl(url);
+        house.setMainPic(page.getHtml().xpath("//*[@id=\"album-box\"]/div[1]/div/ul/li/img/@src").toString());
         house.setBuildYear(page.getHtml().xpath("/html/body/div[5]/section[1]/div[2]/div[1]/dl[8]/dd/text()").toString());
         house.setDescription("");
         house.setPageId(getPageIdFromUrl(url));

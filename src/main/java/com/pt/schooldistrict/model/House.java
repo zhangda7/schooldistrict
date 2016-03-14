@@ -64,6 +64,26 @@ public class House {
      */
     private String url;
 
+    public String getMainPic() {
+        return mainPic;
+    }
+
+    public void setMainPic(String mainPic) {
+        this.mainPic = mainPic;
+    }
+
+    public String getDetailPic() {
+        return detailPic;
+    }
+
+    public void setDetailPic(String detailPic) {
+        this.detailPic = detailPic;
+    }
+
+    private String mainPic;
+
+    private String detailPic;
+
     public String getStatus() {
         return status;
     }

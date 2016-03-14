@@ -30,7 +30,7 @@
     </resultMap>
 
 
-    <select id="selectById" resultType="House" parameterType="int">
+    <select id="selectById" resultMap="HouseMap" parameterType="int">
         SELECT * FROM sd_house where id =#{id}
     </select>
 
@@ -56,9 +56,9 @@
 
     <insert id="insert" parameterType="House">
         INSERT INTO sd_house
-        (title, estate_id, price, area, type, buildYear, url, pageId, status, gmt_created, gmt_modified)
+        (title, estate_id, price, area, type, buildYear, url, pageId, status, mainPic, detailPic, gmt_created, gmt_modified)
         VALUES
-        (#{title}, #{estateId}, #{price}, #{area}, #{type}, #{buildYear}, #{url}, #{pageId}, #{status}, now(), now())
+        (#{title}, #{estateId}, #{price}, #{area}, #{type}, #{buildYear}, #{url}, #{pageId}, #{status}, #{mainPic}, #{detailPic}, now(), now())
     </insert>
 
     <select id="listAll" resultMap="HouseMap">
@@ -112,6 +112,12 @@
             </if>
             <if test="status != null">
                 status = #{status, jdbcType=VARCHAR},
+            </if>
+            <if test="mainPic != null">
+                mainPic = #{mainPic, jdbcType=VARCHAR},
+            </if>
+            <if test="detailPic != null">
+                detailPic = #{detailPic, jdbcType=VARCHAR},
             </if>
             gmt_modified = now()
         </set>
