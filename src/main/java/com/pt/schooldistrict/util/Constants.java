@@ -14,15 +14,15 @@ public class Constants {
     /**
      * 链家的每个小区详细信息的列表
      */
-    public final static String URL_ESTATE_DETAIL_REGEX = "http://sh.lianjia.com/xiaoqu/\\d+/?$";
+    public final static String URL_ESTATE_REGEX = "http://sh.lianjia.com/xiaoqu/\\d+\\.html$";
     /**
      * 链家的每个小区二手房的列表
      */
-    public final static String URL_ONSALE_LIST_REGEX = "http://sh.lianjia.com/xiaoqu/\\d+/esf/*";
+    public final static String URL_ONSALE_LIST_REGEX = "http://sh.lianjia.com/ershoufang/\\w+$";
     /**
      * 每个出售的二手房的详细信息
      */
-    public final static String URL_HOUSE_DETAIL_REGEX = "http://sh.lianjia.com/ershoufang/\\w*";
+    public final static String URL_HOUSE_DETAIL_REGEX = "http://sh.lianjia.com/ershoufang/\\w*\\.html$";
 
     public final static String HOUSE_STATUS_ONLINE = "online";
 

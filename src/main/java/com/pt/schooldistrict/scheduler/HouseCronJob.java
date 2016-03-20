@@ -7,6 +7,7 @@ import com.pt.schooldistrict.model.House;
 import com.pt.schooldistrict.model.HouseHistory;
 import com.pt.schooldistrict.model.SchoolDistrict;
 import com.pt.schooldistrict.util.Constants;
+import com.pt.schooldistrict.util.Util;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -39,8 +40,10 @@ import java.util.logging.Logger;
  */
 public class HouseCronJob implements Job, PageProcessor {
     private Logger logger = Logger.getLogger(HouseCronJob.class.getCanonicalName());
-    private Site site = Site.me().setRetryTimes(3).setSleepTime(100);
+    private Site site = Site.me().setRetryTimes(3).setSleepTime(10000);
     private final static String LOG_TAG = "[HouseCronJob] ";
+    private final static String LIANJIA_URL = "http://sh.lianjia.com/";
+    private final static String ESTATE_LIST_SUFFIX = "ershoufang";
 
     ApplicationContext ctx = new ClassPathXmlApplicationContext("spring-config.xml");
     EstateDao estateDao=(EstateDao) ctx.getBean("estateDao");
@@ -51,7 +54,7 @@ public class HouseCronJob implements Job, PageProcessor {
 
     /**
      * 处理小区出售的二手房信息
-     * URL Pattern : http://sh.lianjia.com/xiaoqu/5011000017872/esf/
+     * URL Pattern : http://sh.lianjia.com/xiaoqu/5011000017872/ershoufang/
      * @param page
      */
     private void processHouseList(Page page) {
@@ -131,21 +134,29 @@ public class HouseCronJob implements Job, PageProcessor {
     private void processHouse(Page page) {
         House house = new House();
         String url = page.getUrl().toString();
-        String estateUrl = page.getHtml().xpath("/html/body/div[5]/section[1]/div[2]/div[1]/dl[8]/dd/a/@href").toString();
-        estateUrl = estateUrl.substring(0, estateUrl.length() - 1);
+        String estateUrl = page.getHtml().xpath("/html/body/div[3]/div[2]/div[2]/table/tbody/tr[5]/td[2]/a/@href").toString();
+        estateUrl = estateUrl.substring(0, estateUrl.length() - 5); // -5 to remove .html in last
         String estatePageId = estateUrl.substring(estateUrl.lastIndexOf('/') + 1, estateUrl.length());
+        logger.info(String.format("Find estatePageId %s of house %s", estatePageId, url));
         int estateId = estateDao.selectByPageId(estatePageId).getId();
-        house.setTitle(page.getHtml().xpath("/html/body/div[5]/div[1]/div[1]/h1/text()").toString());
+        house.setTitle(page.getHtml().xpath("/html/body/div[3]/div[1]/div/div[1]/h1/text()").toString());
         house.setPrice((int)Double.parseDouble(page.getHtml().
-                xpath("/html/body/div[5]/section[1]/div[2]/div[1]/dl[1]/dd/span/strong/text()").toString()));
-        String area = page.getHtml().xpath("/html/body/div[5]/section[1]/div[2]/div[1]/dl[1]/dd/span/i/text()").toString();
-        house.setArea(Float.parseFloat(area.substring(2, area.length() - 1)));
+                xpath("/html/body/div[3]/div[2]/div[2]/div[1]/div[1]/div/text()").toString()));
+        String area = page.getHtml().xpath("/html/body/div[3]/div[2]/div[2]/div[1]/div[3]/div/text()").toString();
+        house.setArea(Float.parseFloat(area));
         house.setUrl(url);
-        house.setMainPic(page.getHtml().xpath("//*[@id=\"album-box\"]/div[1]/div/ul/li/img/@src").toString());
-        house.setBuildYear(page.getHtml().xpath("/html/body/div[5]/section[1]/div[2]/div[1]/dl[8]/dd/text()").toString());
+        //house.setMainPic(page.getHtml().xpath("//*[@id=\"album-box\"]/div[1]/div/ul/li/img/@src").toString());
+        house.setBuildYear(page.getHtml().xpath("/html/body/div[3]/div[2]/div[2]/table/tbody/tr[2]/td[4]/text()").toString());
         house.setDescription("");
         house.setPageId(getPageIdFromUrl(url));
-        house.setType(page.getHtml().xpath("/html/body/div[5]/section[1]/div[2]/div[1]/dl[5]/dd/text()").toString());
+        //新改版后type的结果是3 2,代表三室两厅
+        String type = page.getHtml().xpath("/html/body/div[3]/div[2]/div[2]/div[1]/div[2]/div/text()").toString();
+        int spaceIndex = type.indexOf(' ');
+        if(spaceIndex > 0 && (spaceIndex + 2 <= type.length())) {
+            type = type.substring(0,1) + "室" + type.substring(spaceIndex + 1, spaceIndex + 2) + "厅";
+        }
+        //String numberOfHall = page.getHtml().xpath("")
+        house.setType(type);
         house.setEstateId(estateId);
         house.setStatus(Constants.HOUSE_STATUS_ONLINE);
         House dbHouse = houseDao.selectByPageId(getPageIdFromUrl(url));
@@ -164,6 +175,29 @@ public class HouseCronJob implements Job, PageProcessor {
 
     }
 
+    /**
+     * 处理小区的信息
+     * URL Pattern:http://sh.lianjia.com/xiaoqu/5011000004411/
+     * @param page
+     */
+    private void processEstate(Page page) {
+        //Estate estate = new Estate();
+        String url = page.getUrl().toString();
+        try {
+            /*estate.setName(page.getHtml().xpath("/html/body/div[5]/div[1]/section/div[1]/div[1]/a[1]/h1/text()").toString());
+            String urlWithoutLastSlash = url.substring(0, url.length() - 1);
+            estate.setPageId(urlWithoutLastSlash.substring(urlWithoutLastSlash.lastIndexOf('/') + 1));
+            estate.setAddress(page.getHtml().xpath("/html/body/div[5]/div[1]/section/div[1]/div[1]/span[2]/text()").toString());
+            estate.setBuildYear(page.getHtml().xpath("//*[@id=\"zoneView\"]/div[2]/div[3]/ol/li[1]/span/span/text()").toString());
+            String average = page.getHtml().xpath("//*[@id=\"zoneView\"]/div[2]/div[2]/div/span/text()").toString().trim();*/
+            String ershoufang = page.getHtml().xpath("//*[@id=\"res-nav\"]/ul/li[2]/a/@href").toString();
+            logger.info("ershoufang list : " + ershoufang);
+            page.addTargetRequest(ershoufang);
+        } catch(Exception ex) {
+
+        }
+    }
+
     @Override
     public void execute(JobExecutionContext jobCtx) throws JobExecutionException {
         System.out.println(jobCtx.getTrigger().getJobKey() + "time is " + new Date());
@@ -174,13 +208,16 @@ public class HouseCronJob implements Job, PageProcessor {
 
     private void addTargetPagesFromDB(Page page) {
         List<SchoolDistrict> schoolDistricts = schoolDistrictDao.listAll();
+        int num = 0;
         for(SchoolDistrict schoolDistrict : schoolDistricts) {
             Estate estate = estateDao.selectById(schoolDistrict.getEstateId());
             //更新该estate的online的house的状态为gone
             houseDao.updateEstateStatus(estate.getId());
             //一定要在最后加上esf/pg1,不加pg1的话分页有问题
-            page.addTargetRequest(estate.getUrl() + "esf/pg1");
-            //break;
+            page.addTargetRequest(estate.getUrl());
+            /*if(num++ > 10) {
+                break;
+            }*/
         }
         //for single test
         //houseDao.updateEstateStatus(161);
@@ -196,6 +233,9 @@ public class HouseCronJob implements Job, PageProcessor {
         } else if(page.getUrl().regex(Constants.URL_HOUSE_DETAIL_REGEX).match()) {
             logger.info(LOG_TAG + "processHouse");
             processHouse(page);
+        } else if(page.getUrl().regex(Constants.URL_ESTATE_REGEX).match()) {
+            logger.info(LOG_TAG + "processEstate");
+            processEstate(page);
         } else if(page.getUrl().toString().equals("https://www.baidu.com")) {
             //fake url, read from DB
             addTargetPagesFromDB(page);

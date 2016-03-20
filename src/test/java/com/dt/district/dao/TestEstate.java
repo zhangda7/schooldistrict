@@ -128,6 +128,21 @@ public class TestEstate {
 
     }
 
+    @Test
+    public void updateEstateUrl() {
+        EstateDao estateDao=(EstateDao) ctx.getBean("estateDao");
+        List<Estate> estates = estateDao.listAll();
+        for(Estate estate : estates) {
+            String url = estate.getUrl();
+            if(url != null) {
+                url = url.substring(0, url.length() - 1) + ".html";
+                estate.setUrl(url);
+            }
+            estateDao.updateById(estate);
+        }
+    }
+
+
     /*public static void main(String[] args) {
         TestEstate test = new TestEstate();
         test.testListAll();

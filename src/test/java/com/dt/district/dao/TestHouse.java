@@ -62,7 +62,7 @@ public class TestHouse {
     @Test
     public void testSelectById() {
         HouseDao houseDao=(HouseDao) ctx.getBean("houseDao");
-        House es = houseDao.selectById(11846);
+        House es = houseDao.selectById(4);
         System.out.println(es);
     }
 
