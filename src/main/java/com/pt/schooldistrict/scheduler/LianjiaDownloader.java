@@ -16,7 +16,6 @@ public class LianjiaDownloader extends HttpClientDownloader{
      */
     @Override
     protected void onError(Request request) {
-        request
 
     }
 
